@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Website Thumbnail Information -->
+    <title>Color Extractor</title>
+    <meta property="og:url" content="https://github.com/JihunKimCode/Color-Extractor">
+    <meta property="og:title" content="Color Extractor">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://jihunkimcode.github.io/Wordle-Solver-Web/palette-solid.svg">
+    <meta property="og:description" content="Extract color from given image">
+    <!-- Website Information -->
+    <meta name="author" content="Jihun Kim">
+    <meta name="keywords" content="Color Extractor">
+    <meta name="description" content="Extract color from given image">    
+    <!-- Website Settings -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="palette-solid.svg">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div class="icons">
+        <a href="https://github.com/JihunKimCode/Color-Extractor" class="btn btn-github" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-github"></i>
+        </a>
+    </div> 
+    <div class="container">
+        <div class="loader"></div>
+        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+        <div id="imagePlaceholder" class="image-placeholder">
+            <div>
+                <p><b>Click Here</b> to upload image</p> 
+                <p> or <b>Drag & Drop</b> image here</p> 
+                <p class="format">jpg/png/gif/webp/svg images allowed</p> 
+            </div>
+        </div>
+        <img id="uploadedImage" style="max-width: 100%; display: none; margin-top: 20px;" alt="Uploaded Image">
+        <canvas id="imageCanvas" style="display:none;"></canvas>
+        <div id="colorPalette"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
