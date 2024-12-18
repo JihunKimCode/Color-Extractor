@@ -14,3 +14,4 @@ It supports almost all types of image formats including **jpg, jpeg, png, gif, w
 * **Color picker tool** to get a color from the image directly.
   * Users can change the color of the last color box by clicking the color picker icon on it.
 * Click color boxes to **copy the hex code** of the color.
+* Users can change the colors of the image as they wish. They can revert it as well.

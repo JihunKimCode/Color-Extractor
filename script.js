@@ -21,7 +21,60 @@ function initializeEventListeners() {
     uploadedImage.addEventListener('dragenter', (e) => handleDragEnter(e, imagePlaceholder));
     uploadedImage.addEventListener('dragover', (e) => handleDragOver(e, imagePlaceholder));
     uploadedImage.addEventListener('dragleave', (e) => handleDragLeave(e, imagePlaceholder));
-    uploadedImage.addEventListener('drop', handleImageDrop);    
+    uploadedImage.addEventListener('drop', handleImageDrop);
+
+    // Changing image colors
+    colorChanger();
+}
+
+// Change colors in image
+function colorChanger() {
+    const sourceColorInput = document.getElementById('sourceColor');
+    const replacementColorInput = document.getElementById('replacementColor');
+    const applyButton = document.getElementById('applyColorChange');
+    const revertButton = document.getElementById('revertColorChange');
+    
+    const canvas = document.getElementById('imageCanvas');
+    const ctx = canvas.getContext('2d');
+    const uploadedImage = document.getElementById('uploadedImage');
+    
+    let originalImageData = null;  // To store the original image data
+    
+    // Add event listener to apply the color change
+    applyButton.addEventListener('click', () => {
+        const sourceColor = hexToRgb(sourceColorInput.value);
+        const replacementColor = hexToRgb(replacementColorInput.value);
+        
+        // Store the original image data before modification
+        originalImageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        
+        for (let i = 0; i < imageData.data.length; i += 4) {
+            const r = imageData.data[i];
+            const g = imageData.data[i + 1];
+            const b = imageData.data[i + 2];
+    
+            if (colorDistance({ r, g, b }, sourceColor) < 70) {
+                imageData.data[i] = replacementColor.r;
+                imageData.data[i + 1] = replacementColor.g;
+                imageData.data[i + 2] = replacementColor.b;
+            }
+        }
+    
+        ctx.putImageData(imageData, 0, 0);
+    
+        // Update the uploadedImage element to reflect canvas changes
+        uploadedImage.src = canvas.toDataURL();
+    });
+
+    // Add event listener for revert colors
+    revertButton.addEventListener('click', () => {
+        if (originalImageData) {
+            ctx.putImageData(originalImageData, 0, 0);  // Revert to the original image
+            uploadedImage.src = canvas.toDataURL();     // Update the uploadedImage
+        }
+    });
 }
 
 // Handle Drag Enter
@@ -111,7 +164,7 @@ async function processImageColors(img) {
 // Setup Canvas and Draw Image
 function setCanvas(img) {
     const canvas = document.getElementById('imageCanvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true }); // Optimization for frequent readbacks
     canvas.width = img.width;
     canvas.height = img.height;
     ctx.drawImage(img, 0, 0);
@@ -178,6 +231,27 @@ function setColorPalette(colors) {
         const colorBox = createColorBox(color);
         paletteContainer.appendChild(colorBox);
 
+        // Update image color changers
+        if (index === 0){
+            const colorchange = document.getElementById('colorChangeControls');
+            const colorlabel = document.getElementsByClassName('change-color');
+            const colorChangeButton = document.getElementsByClassName('apply-button');
+            
+            // Apply background color to the color change control
+            colorchange.style.backgroundColor = color;
+            colorchange.style.display = 'flex';
+            
+            // Apply the text color to the label
+            for (let i = 0; i < colorlabel.length; i++) {
+                colorlabel[i].style.color = isDarkColor(color) ? '#fff' : '#000';
+            }
+
+            // Apply styles to the buttons
+            for (let i = 0; i < colorChangeButton.length; i++) {
+                colorChangeButton[i].style.color = isDarkColor(color) ? '#fff' : '#000';
+                colorChangeButton[i].style.borderColor = isDarkColor(color) ? '#fff' : '#000';
+            }            
+        }
         // If this is the last color, replace it with a syringe tool
         if (index === colors.length-1 && index === 8) {
             addColorSyringeTool(colorBox, color);
