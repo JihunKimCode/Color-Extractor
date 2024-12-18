@@ -9,7 +9,7 @@ To change the uploaded image, click the uploaded image or drag and drop over the
 It supports almost all types of image formats including **jpg, jpeg, png, gif, webp, and svg**.
 
 ## Features
-![image](https://github.com/user-attachments/assets/d034008a-e5bd-4573-abba-449806f2b8e0)
+![image](https://github.com/user-attachments/assets/b801db72-7333-4a20-92da-8a0dc8153e4e)
 * Upload image to **extract dominant colors**.
 * **Color picker tool** to get a color from the image directly.
   * Users can change the color of the last color box by clicking the color picker icon on it.
