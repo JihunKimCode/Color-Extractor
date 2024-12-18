@@ -169,3 +169,9 @@ button:active {
     color: #007bff;
     transition: border-color 0.3s, background-color 0.3s;
 }
+
+@media only screen and (max-width: 767px) {
+    .image-placeholder {
+        max-width: calc(100% - 20px);
+    }
+}
