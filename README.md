@@ -1,4 +1,5 @@
 # Color-Extractor
+jihunkimcode.github.io/Color-Extractor/
 ## How to Use
 ![image](https://github.com/user-attachments/assets/405692dd-02eb-4783-9ea6-38ecfc7b41e9)
 
