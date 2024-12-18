@@ -204,8 +204,12 @@ button:active {
     border: 2px solid white;
 }
 
+.apply-button:hover{
+    transform: scale(1.05);
+}
+
 .apply-button:active {
-    transform: scale(.96);
+    transform: scale(.95);
 }
 
 @media only screen and (max-width: 767px) {
