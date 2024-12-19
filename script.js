@@ -27,6 +27,38 @@ function initializeEventListeners() {
     colorChanger();
 }
 
+// Color Distance Elements
+const colorDistanceRange = document.getElementById('colorDistanceRange');
+const colorDistanceValue = document.getElementById('rangeValue');
+const expButton = document.getElementById('explanationButton');
+const explanation = document.getElementsByClassName('explanation')[0];
+const refreshBtn = document.getElementById('refreshButton');
+
+// Update slider value
+colorDistanceRange.addEventListener('input', () => {
+    colorDistanceValue.textContent = colorDistanceRange.value;
+});
+
+// Show explanation
+expButton.addEventListener('click', () => {
+    if (explanation.style.display === "" || explanation.style.display === "none") {
+        explanation.style.display = "block";
+    } else {
+        explanation.style.display = "none";
+    }
+});
+
+refreshBtn.addEventListener('click',refreshPalette);
+
+// Change palette colors based on updated color distance threshold
+async function refreshPalette(){
+    const canvas = document.getElementById('imageCanvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const dominantColors = await extractDominantColors(imageData, 9);
+    setColorPalette(dominantColors);
+}
+
 // Change colors in image
 function colorChanger() {
     const sourceColorInput = document.getElementById('sourceColor');
@@ -35,11 +67,19 @@ function colorChanger() {
     const revertButton = document.getElementById('revertColorChange');
     
     const canvas = document.getElementById('imageCanvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     const uploadedImage = document.getElementById('uploadedImage');
     
     let originalImageData = null;  // To store the original image data
     
+    // Remove image data after new image is uploaded.
+    uploadedImage.addEventListener('click', () => {
+        originalImageData = null;
+    });
+    uploadedImage.addEventListener('drop', () => {
+        originalImageData = null;
+    });
+
     // Add event listener to apply the color change
     applyButton.addEventListener('click', () => {
         const sourceColor = hexToRgb(sourceColorInput.value);
@@ -55,7 +95,7 @@ function colorChanger() {
             const g = imageData.data[i + 1];
             const b = imageData.data[i + 2];
     
-            if (colorDistance({ r, g, b }, sourceColor) < 70) {
+            if (colorDistance({ r, g, b }, sourceColor) < colorDistanceRange.value) {
                 imageData.data[i] = replacementColor.r;
                 imageData.data[i + 1] = replacementColor.g;
                 imageData.data[i + 2] = replacementColor.b;
@@ -208,7 +248,7 @@ function clusterColors(colors, maxColors) {
 
         // Mark similar colors as visited
         for (const otherColor of colors) {
-            if (!visited.has(otherColor) && colorDistance(hexToRgb(color), hexToRgb(otherColor)) < 70) {
+            if (!visited.has(otherColor) && colorDistance(hexToRgb(color), hexToRgb(otherColor)) < colorDistanceRange.value) {
                 visited.add(otherColor);
             }
         }
@@ -236,7 +276,14 @@ function setColorPalette(colors) {
             const colorchange = document.getElementById('colorChangeControls');
             const colorlabel = document.getElementsByClassName('change-color');
             const colorChangeButton = document.getElementsByClassName('apply-button');
+            const colorDistanceInput = document.getElementById('colorDistanceInput');
+            const explanation = document.getElementsByClassName('explanation')[0].querySelector('p');
             
+            // Apply background color to the color diatance control
+            colorDistanceInput.style.backgroundColor = color;
+            colorDistanceInput.style.display = 'flex';
+            document.documentElement.style.setProperty('--rangehovercolor', color);
+
             // Apply background color to the color change control
             colorchange.style.backgroundColor = color;
             colorchange.style.display = 'flex';
@@ -251,7 +298,14 @@ function setColorPalette(colors) {
                 colorChangeButton[i].style.color = isDarkColor(color) ? '#fff' : '#000';
                 colorChangeButton[i].style.borderColor = isDarkColor(color) ? '#fff' : '#000';
             }            
+            explanation.style.color = isDarkColor(color) ? "#fff" : '#000';
         }
+
+        // Set input range color
+        if(index === 1) document.documentElement.style.setProperty('--rangecolor', color);
+        if(index === 2) document.documentElement.style.setProperty('--rangebackground', color);
+        if(index === 3) document.documentElement.style.setProperty('--rangehovercolor', color);
+
         // If this is the last color, replace it with a syringe tool
         if (index === colors.length-1 && index === 8) {
             addColorSyringeTool(colorBox, color);

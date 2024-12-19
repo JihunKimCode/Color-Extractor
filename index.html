@@ -36,7 +36,20 @@
         </div>
         <img id="uploadedImage" alt="Uploaded Image">
         <canvas id="imageCanvas" style="display:none;"></canvas>
-        <div id="colorPalette"></div>
+        <div id="colorDistanceInput">
+            <div class="threshold">
+                <label for="colorDistanceRange" class="change-color">Color Distance:</label>
+                <input type="range" id="colorDistanceRange" name="colorDistance" min="10" max="100" value="50">
+                <span id="rangeValue" class="change-color">50</span>
+                <button id="refreshButton" class="apply-button"><i class="fa-solid fa-rotate"></i> Update Palette</button>
+                <button id="explanationButton" class="apply-button"><i class="fa-solid fa-question"></i></button>
+            </div>
+            <div class="explanation">
+                <p>
+                    Color Distance controls color matching: smaller values require closer similarity, ideal for detailed work.
+                </p>
+            </div>
+        </div>
         <div id="colorChangeControls">
             <label class="change-color">Source Color:</label>
             <input type="color" id="sourceColor">
@@ -45,6 +58,7 @@
             <button id="applyColorChange" class="apply-button"><i class="fa-solid fa-paintbrush"></i> Change Color</button>
             <button id="revertColorChange" class="apply-button"><i class="fa-solid fa-clock-rotate-left"></i> Revert</button>
         </div>    
+        <div id="colorPalette"></div>
     </div>
     <script src="script.js"></script>
 </body>
